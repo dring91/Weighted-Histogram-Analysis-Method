@@ -4,7 +4,10 @@ matplotlib.use('agg')
 import matplotlib.pyplot as plt
 
 def plot_histogram_overlap(bins, hists, args, kT):
-  ## check for overlap so that iteration doesn't diverge
+  """ 
+  Creates a plot to help check for proper histogram overlap so that iteration is stable
+  """
+
   fig, ax = plt.subplots()
   lines = ax.plot(bins, hists)
   ax.set_xlabel(r'$N$')
@@ -13,7 +16,11 @@ def plot_histogram_overlap(bins, hists, args, kT):
   fig.savefig(args.path + '{}_overlap.svg'.format(args.output))
 
 def plot_wham_results(bins, full_histogram, iter_errs, n, args, kT):
-  ## plot WHAM results and individual pmfs
+  """
+  Plot full free energy curve from histogram results. 
+  Optionally, can choose to plot individual pmfs over top to ensure proper wham reweighting.
+  """
+
   plt.rc('font',size=12)
   fig, ax = plt.subplots(constrained_layout=True)
   #for hist in histograms:
@@ -35,6 +42,10 @@ def plot_wham_results(bins, full_histogram, iter_errs, n, args, kT):
   return bins, full_histogram
 
 def plot_convergence(iter_errs, args, kT):
+  """
+  Plot the wham error as a function of iterations.
+  """
+
   fig, ax = plt.subplots()
   ax.semilogy(iter_errs, 'k')
   #for err in conv:

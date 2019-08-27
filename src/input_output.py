@@ -2,6 +2,10 @@ import numpy as np
 from compute_wham import compute_inefficiency
 
 def write_results(bins, hists, ns, result, args):
+  """
+  Writes all histograms to an output text file.
+  """
+
   ## concatenate bins and histograms and construct header
   out = np.concatenate((bins[:,np.newaxis],hists),axis=1)
   header = "".join(["{:5.0f}" for _ in range(hists.shape[1])])
@@ -17,6 +21,9 @@ def write_results(bins, hists, ns, result, args):
   #  np.savetxt(file, np.column_stack((bins, full_histogram, errors)), header='bins hist errs')
 
 def create_histograms(args, grid):
+  """
+  Reads in INDUS results and constructs the appropriate histograms.
+  """
 
   ns, hists, ineffs, errs = [], [], [], []
   for reps in args.input:
@@ -45,6 +52,10 @@ def create_histograms(args, grid):
   return hists, errs, ns
 
 def check_config_change(args):
+  """
+  Writes the commandline arguments to a 'config' file if 'config' isn't found. Alternately, it checks that the commandline arguments match 'config' file and halts the program if they don't. This prevents automatically overwriting whammed configurations if the input changes. It does not protect against overwriting wham data if the progran is rerun with new wham specifications.
+  """
+
   ## check for meta file (describes which data sets are being whammed)
   try:
     with open(args.path + 'args','r') as file:

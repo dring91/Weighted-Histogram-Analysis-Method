@@ -7,6 +7,9 @@ from plot_results import *
 from compute_wham import *
 
 def main():
+  """
+  Program to compute full free energy curves using the Weighted Histogram Analysis Method.
+  """
 
   parser = ArgumentParser()
   parser.add_argument('-i','--input',nargs='+',action='append',help="""Data files from umbrella sampling.""")
@@ -17,14 +20,15 @@ def main():
   parser.add_argument('-g','--guess',type=float,nargs='+',help="""Initial guess for wham iteration.""")
   args = parser.parse_args()
 
-  # Specify the temperature
+  # Specify the temperature and other important parameters
   kT = 0.7
+  zmin, zmax, dz = 0, 100, 1
+  max_iters = 1000
 
   # Check for changes in wham configuration to avoid overriding a previous wham result
   check_config_change(args)
 
   # define one grid so that all histograms can be easily added together
-  zmin, zmax, dz = 0, 100, 1
   grid = np.arange(zmin,zmax,dz)
   bins = np.diff(grid)/2 + grid[:-1]
 
@@ -40,7 +44,6 @@ def main():
   # setup WHAM inputs
   biases = bias(bins, args.k, args.x)
   guess = np.ones(ns.shape)
-  max_iters = 1000
   
   # compute wham
   result, full_histogram, full_errors, iter_errs, n = converge_wham(max_iters, [guess, bins, hists, errs, ns, biases, 1, kT])
