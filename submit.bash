@@ -9,9 +9,6 @@
 
 module load python3/3.7.0
 . ~/wavy/py37/bin/activate
-exc=~/wavy/scripts
-
-
 
 N=100; S=0; R=3; A=1; W=8; P=1; K=0.05; E=0554
 dirs=(3206151 3206152 3206153 3206154 3206155 3206156 3206157 3206158 3206159 3206160 3206161 3206162 3206163 3206164 3206165 3206166 3206167 3206168 3206169 3206170 3206171 3618939 3618940 3618941 3618942 3618943 3618944 3618945 3618946 3618947 3618948 3618949 3618950 3618951 3618952 3618953 3618954 3618955 3618956 3618957 3618958 3618959 3618960 3618961 3618962 3618963)
@@ -25,16 +22,11 @@ M=(0 12 24 36 48 60 72 84 96 108 120 126 132 138 144 150 156 162 168 174 180 186
 
 echo ${#dirs[*]}
 echo ${#M[*]}
-for i in {0..206}; do
-#for i in {0..22}; do
-  j=$(( $i-92 ))
+for i in {0..45}; do
   files[$i]="$SCRATCH/indus/${dirs[$i]}/plumed.out"
   #files[$i]="$SCRATCH/indus/A${A}W${W}/M${M[$i]}"
-  #files[$i]="$SCRATCH/indus/${dirs[$i]}/heights.dat"
-  #files[$i]="N${N}_S${S}_R${R}_A${A}_W${W}_P${P}_E${E}_M${M[$j]}.lammpstrj"
-  #dirs[$i]="$SCRATCH/indus/${dirs[$i]}/"
+  dirs[$i]="$SCRATCH/indus/${dirs[$i]}/"
   #ls "${dirs[$i]}${files[$i]}"
-  #time python $exc/calcMeltHeight.py -i ${files[$i]} -o heights.dat --dir $SCRATCH/indus/${dirs[$i]}/ --polymer 1 --capillary 2 3
 done
 
-time python $exc/wham.py -i ${files[*]:0:5} -p indus/A${A}W${W}/ -x ${M[*]:0:5} -k $K -o N${N}S${S}R${R}A${A}W${W}P${P}E${E}
+time python src/wham.py -i ${files[*]:0:5} -p output/ -x ${M[*]:0:5} -k $K -o N${N}S${S}R${R}A${A}W${W}P${P}E${E}
