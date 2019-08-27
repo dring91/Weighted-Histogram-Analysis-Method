@@ -2,7 +2,7 @@
 
 ## Description
 
-\\[ \xi_1,\xi_2 \\]
+$ \xi_1,\xi_2 $
 
 ## Run Instructions
 
