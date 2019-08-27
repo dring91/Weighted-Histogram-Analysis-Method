@@ -1,63 +1,40 @@
 #!/bin/bash
-#PBS -N analyze
-#PBS -l nodes=1:ppn=1,pmem=500mb,walltime=01:00:00
-#PBS -d /home/daring/wavy/
-#PBS -q p_rrig           
-#PBS -j oe
+#SBATCH --nodes=1
+#SBATCH --tasks-per-node=1
+#SBATCH --mem-per-cpu=100M
+#SBATCH -p standby
+#SBATCH -t 10:00
+#SBATCH -J analyze
+#SBATCH -o analyze.o%j
 
-. ~/py-3.6/bin/activate
+module load python3/3.7.0
+. ~/wavy/py37/bin/activate
+exc=~/wavy/scripts
 
-#time python prog/calcCentersOfMass.py inputs/N100_S0_R3_A1_W2_P1_out.conf -g 1 -g 2 3 --format conf
-#time python prog/undo_bondswap.py -i N100_S0_R3_A1_W8_P0_E0515_K0_D23.8_equil.conf -p 2249059.walnut-login1.internal/ -s .conf -l 100 --polymer 1 --unwrap
-#time python prog/undo_bondswap.py -i conf.40000000 -p 2249060.walnut-login1.internal/ -s .40000000 -l 100 --polymer 1 --unwrap
-#time python prog/undo_bondswap.py -i conf.70000000 -p 2249060.walnut-login1.internal/ -s .70000000 -l 100 --polymer 1 --unwrap
-#time python prog/undo_bondswap.py -i conf.100000000 -p 2249060.walnut-login1.internal/ -s .100000000 -l 100 --polymer 1 --unwrap
-#time python prog/thermo.py 2249059.walnut-login1.internal/ 2249060.walnut-login1.internal/ -l 26
-#N=100; S=0; R=3; A=1; W=8; P=(0 1); E=0515; K=4000; D=(24.35 25.0); t=(40000000 70000000 100000000)
-#dirs=(2250662 2250663 2250664 2250665 2250666 2250667)
-#N=100; S=0; R=3; A=1; W=8; P=1; E=0515; K=4000; D=(24.95 25.0 25.05); t=(40000000 70000000 100000000)
-#dirs=(2253606 2253607 2253608 2253609 2253610 2253611 2253612 2253613 2253614)
-N=100; S=0; R=3; A=1; W=8; P=1; E=0515; K=4000; D=(25.05 25.0 24.95 24.9 24.85 24.8 24.75 24.7 24.65 24.6 24.55 24.5 24.45 24.4 24.35 24.3 24.25 24.2 24.15 24.1 24.05 24.0 23.95 23.9); t=(40000000 70000000 100000000)
-dirs=(2253612 2253613 2253614 2253609 2253610 2253611 2253606 2253607 2253608 2254028 2254029 2254030 2254031 2254032 2254033 2254034 2254035 2254036 2254037 2254038 2254039 2254040 2254041 2254042 2254043 2254044 2254045 2254046 2254047 2254048 2254049 2254050 2254051 2254052 2254053 2254054 2254055 2254056 2254057 2254058 2254059 2254060 2254061 2254062 2254063 2254064 2254065 2254066 2254067 2254068 2254069 2254070 2254071 2254072 2254073 2254074 2254075 2254076 2254077 2254078 2254079 2254080 2254081 2254082 2254083 2254084 2254085 2254086 2254087 2254088 2254089 2254090)
-#N=100; S=0; R=3; A=1; W=8; P=1; E=0515; K=4000; D=(25.05 25.0 24.9 24.85 24.8); t=(40000000 70000000 100000000)
-#dirs=(2254028 2254029 2254030 2254031 2254032 2254033 2254034 2254035 2254036 2254037 2254038 2254039 2254040 2254041 2254042 2254043 2254044 2254045 2254046 2254047 2254048 2254049 2254050 2254051 2254052 2254053 2254054 2254055 2254056 2254057 2254058 2254059 2254060 2254061 2254062 2254063 2254064 2254065 2254066 2254067 2254068 2254069 2254070 2254071 2254072 2254073 2254074 2254075 2254076 2254077 2254078 2254079 2254080 2254081 2254082 2254083 2254084 2254085 2254086 2254087 2254088 2254089 2254090)
-for i in {0..23}; do
-  for j in 0 1 2; do
-    flat=$i*3+$j
-    dir[$flat]=${dirs[$flat]}.walnut-login1.internal
-    file=N${N}_S${S}_R${R}_A${A}_W${W}_P${P}_E${E}_K${K}_D${D[$i]}_${t[$j]}.lammpstrj
-    filenames[$flat]=${dir[$flat]}/coms.dat
-    #time python prog/calcMeltHeight.py -i ${dir[$flat]}/$file -o coms.dat --polymer 1 --capillary 2 3 --dir ${dir[$flat]}/
-  done
-done
-#time python prog/wham.py -i ${dir[*]} -o wham.dat -p ./ -k $K -d ${D[*]}
-#time python prog/plot-ComSeparation.py ${filenames[*]} -l ${D[*]}
 
-#time python prog/undo_bondswap.py -i N100_S0_R3_A1_W8_P1_out.conf -p inputs/ -s _N100_S0_R3_A1_W8_P1.conf -l 100 --polymer 1 --unwrap
 
-dirs=(2271339 2271340 2271341 2271342 2271343); labels=(0 4 8 12 16)
-dirs=(2273282 2273283 2273284 2273285 2273286); labels=(0 4 8 12 16)
-dirs=(2274806 2274807 2274808 2274809 2274810); labels=(20 24 28 32 36)
-dirs=(2275473 2275474 2275475 2275477); labels=(40 44 48 56)
-dirs=(2273282 2273283 2273284 2273285 2273286 2274806 2274807 2274808 2274809 2274810 2275473 2275474 2275475 2275476 2275477); labels=(0 4 8 12 16 20 24 28 32 36 40 44 48 52 56); shifts=(0 -10 -24 -40 -59 -78 -99 -122 -148 -175 -175 -175 -175 -175 -175)
-dirs=(2318723 2318724 2318725 2318726); N=100; S=(0 0 5 5); R=(3 3 6 6); A=(1.5 1 3 2); W=(4 16 4 16); P=1; E=0400
-for i in {0..3}; do
-  #files[$i]="${dirs[$i]}.walnut-login1.internal/plumed.out"
-  #files[$i]="${dirs[$i]}.walnut-login1.internal/heights.dat"
-  #files[$i]="${dirs[$i]}.walnut-login1.internal/N100_S0_R3_A1_W8_P1_E0515_M${labels[$i]}_biased.lammpstrj"
-  files[$i]="${dirs[$i]}.walnut-login1.internal/N${N}_S${S[$i]}_R${R[$i]}_A${A[$i]}_W${W[$i]}_P${P}_E${E}_equil.lammpstrj"
-  #echo "${files[$i]}"
-  #time python scripts/calcMeltHeight.py -i ${files[$i]} -o heights.dat --dir ${dirs[$i]}.walnut-login1.internal/ --polymer 1 --capillary 2 3
+N=100; S=0; R=3; A=1; W=8; P=1; K=0.05; E=0554
+dirs=(3206151 3206152 3206153 3206154 3206155 3206156 3206157 3206158 3206159 3206160 3206161 3206162 3206163 3206164 3206165 3206166 3206167 3206168 3206169 3206170 3206171 3618939 3618940 3618941 3618942 3618943 3618944 3618945 3618946 3618947 3618948 3618949 3618950 3618951 3618952 3618953 3618954 3618955 3618956 3618957 3618958 3618959 3618960 3618961 3618962 3618963)
+M=(0 12 24 36 48 60 72 84 96 108 120 126 132 138 144 150 156 162 168 174 180 186 192 204 216 228 240 252 258 264 270 276 282 288 294 300 306 312 324 336 348 360 372 384 396 408)
+N=100; S=0; R=3; A=1; W=8; P=1; K=0.05; E=0846
+dirs=(3215649 3215650 3215651 3215652 3215653 3215654 3215655 3215656 3215657 3215658 3215659 3215660 3215661 3215662 3215663 3215664 3215665 3215666 3215667 3215668 3215669 3313498 3313499 3313500 3313501 3313502 3313503 3313504 3313505 3313506 3313507 3313508 3313509 3313510 3313511 3313512 3313513 3338454 3338455 3338456 3338457 3338458 3338459 3338461 3338462 3338463 3338464)
+M=(0 12 24 36 48 60 72 84 96 108 120 126 132 138 144 150 156 162 168 174 180 186 192 204 216 228 240 246 252 264 276 282 288 300 306 312 318 324 336 348 354 360 372 378 384 396 408)
+N=100; S=0; R=3; A=1; W=8; P=1; K=0.05; E=0515
+dirs=(3201681 3201682 3201683 3201684 3201686 3201687 3201688 3201690 3201691 3201692 3201693 3201694 3201696 3201697 3201698 3201699 3201700 3201701 3201703 3201704 3201705 3579299 3579300 3579301 3579302 3579303 3579304 3579305 3579306 3579307 3579308 3579310 3579311 3579312 3579313 3579314 3579315 3579316 3579317 3579318 3579318 3579320 3579321 3579322 3579323 3579324)
+M=(0 12 24 36 48 60 72 84 96 108 120 126 132 138 144 150 156 162 168 174 180 186 192 198 204 216 222 228 240 252 258 276 282 288 300 306 312 324 336 348 360 372 378 386 396 408)
+
+echo ${#dirs[*]}
+echo ${#M[*]}
+for i in {0..206}; do
+#for i in {0..22}; do
+  j=$(( $i-92 ))
+  files[$i]="$SCRATCH/indus/${dirs[$i]}/plumed.out"
+  #files[$i]="$SCRATCH/indus/A${A}W${W}/M${M[$i]}"
+  #files[$i]="$SCRATCH/indus/${dirs[$i]}/heights.dat"
+  #files[$i]="N${N}_S${S}_R${R}_A${A}_W${W}_P${P}_E${E}_M${M[$j]}.lammpstrj"
+  #dirs[$i]="$SCRATCH/indus/${dirs[$i]}/"
+  #ls "${dirs[$i]}${files[$i]}"
+  #time python $exc/calcMeltHeight.py -i ${files[$i]} -o heights.dat --dir $SCRATCH/indus/${dirs[$i]}/ --polymer 1 --capillary 2 3
 done
 
-time python scripts/simple-pmf.py -i ${files[0]} -p equilibrate/
-
-#time python scripts/wham.py -i ${files[*]} -o wham -p indus/ -k 0.5 -x ${labels[*]} -g ${shifts[*]}
-#time python scripts/plot-indus.py -i ${files[*]:10:15} -l ${labels[*]:10:15} -k 0.5
-#time python scripts/uwham.py -i ${files[*]} -K 0.5 -N ${labels[*]} -s ${shifts[*]}
-#time python scripts/plot-height_vs_number.py ${files[*]} -l ${labels[*]}
-#time python scripts/shift_config.py 2249060.walnut-login1.internal/unshuffled.conf -o inputs/indus/shifted
-
-#time python scripts/bond_lengths.py inputs/cylinders/N5_S0_R3_out.conf
-#time python scripts/undo_bondswap.py -i N100_S0_R3_out.conf -p inputs/cylinders/ -s _N100_S0_R3.conf -l 100 --polymer 1 --unwrap
-#time python scripts/shorten_chains.py -i inputs/cylinders/unshuffled_N100_S0_R3 -o N5_S0_R3_out -l 5 --polymer 1
+time python $exc/wham.py -i ${files[*]:0:5} -p indus/A${A}W${W}/ -x ${M[*]:0:5} -k $K -o N${N}S${S}R${R}A${A}W${W}P${P}E${E}
